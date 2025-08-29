@@ -1,0 +1,109 @@
+
+
+# 📒 Node.js Working Notes
+
+### ⚡ Node.js Overview
+
+* Node.js is a **JavaScript runtime** built on **Google Chrome’s V8 engine**.
+* It follows an **event-driven, non-blocking I/O model** → lightweight & efficient for scalable apps.
+
+---
+
+### 🔄 Request & Response Cycle
+
+1. **Client sends request** → (HTTP request, DB query, file read, etc.)
+2. **Node.js receives request** → enters **Event Loop**.
+3. If request is **non-blocking (async I/O)** → handled by **event loop** with help of **Thread Pool**.
+4. If request is **blocking (sync operation)** → Node.js main thread is blocked until task finishes.
+5. **Response is sent back** to the client.
+
+---
+
+### 🌀 Event Loop
+
+* The **core mechanism** of Node.js.
+* Keeps listening for events/callbacks & executes them in phases.
+* Phases of Event Loop:
+
+  1. **Timers** → setTimeout, setInterval
+  2. **Pending Callbacks** → I/O callbacks waiting
+  3. **Idle/Prepare** → internal use
+  4. **Poll** → get new I/O events, execute I/O callbacks
+  5. **Check** → setImmediate callbacks
+  6. **Close callbacks** → e.g., `socket.on('close')`
+
+---
+
+### 🚫 Blocking Operation
+
+* **Blocks main thread** until task finishes.
+* Example:
+
+  ```js
+  const fs = require('fs');
+  const data = fs.readFileSync('file.txt'); // Blocking
+  console.log("This runs after file is read");
+  ```
+* Problem → slows down performance if many requests.
+
+---
+
+### ✅ Non-Blocking Operation
+
+* **Does not block main thread** → handled asynchronously.
+* Example:
+
+  ```js
+  const fs = require('fs');
+  fs.readFile('file.txt', (err, data) => { // Non-Blocking
+    console.log("File read complete");
+  });
+  console.log("This runs immediately");
+  ```
+* Advantage → Node.js can handle **thousands of requests concurrently**.
+
+---
+
+### 👥 Thread Pool (libuv)
+
+* Node.js itself is **single-threaded**, but uses **libuv** for async tasks.
+* libuv manages a **Thread Pool (default 4 threads)** → handles tasks like:
+
+  * File system operations
+  * DNS lookups
+  * Crypto operations (hashing, encryption)
+  * Compression
+* After execution → result is passed back to **Event Loop** → callback executed.
+
+---
+
+### 📌 Summary
+
+* Node.js = **Single-threaded event loop + Thread Pool for heavy I/O**.
+* **Non-blocking I/O** → efficient for real-time apps.
+* **Blocking code** should be avoided in main thread.
+* Great for APIs, chat apps, streaming, but not for **CPU-heavy tasks** (unless offloaded to worker threads).
+
+---
+
+
+Note :- Default Thread Pool Size = 4.
+Max? - 9core cpu - 8
+
+
+
+ 🌐 Client (Request)
+          │
+          ▼
+   🟢 Event Loop
+          │
+   ┌──────┴─────────┐
+   │                │
+   ▼                ▼
+⛔ Blocking      👥 Thread Pool (libuv)
+(Main thread)     (Async I/O: File, DB, DNS, Crypto)
+   │                │
+   ▼                │
+📤 Response  ◀──────┘
+   (to Client)
+
