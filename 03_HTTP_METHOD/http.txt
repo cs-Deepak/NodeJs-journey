@@ -1,0 +1,11 @@
+1. HTTP Get ->
+    When you want to get some data from the server.
+
+2. HTTP POST ->
+    When you want to send and mutate (data change or data add) some data in server.
+
+3. HTTP PUT -> 
+
+4. HTTP PATCH -> Existing entry change 
+
+5. HTTP DELETE -> Deleting  
