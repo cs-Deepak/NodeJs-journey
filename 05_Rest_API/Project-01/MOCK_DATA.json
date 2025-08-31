@@ -8007,7 +8007,6 @@
     "job_title": "Software Dev",
     "id": 1001
   },
-
   {
     "first_name": "Prince",
     "last_name": "Kumar",
@@ -8015,5 +8014,13 @@
     "gender": "male",
     "job_title": "Student",
     "id": 1002
+  },
+  {
+    "first_name": "Prince",
+    "last_name": "Kumar",
+    "email": "prince@gmai.com",
+    "gender": "male",
+    "job_title": "Student",
+    "id": 1003
   }
 ]

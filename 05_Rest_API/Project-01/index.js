@@ -7,7 +7,26 @@ const app = express();
 const PORT = 8000;
 
 //Middleware - Plugin
-app.use(express.urlencoded({extended: false}))
+ app.use(express.urlencoded({extended: false}))
+
+app.use((req, res, next)=>{
+  // console.log('Hello From Middleware 1');
+  fs.appendFile(
+    "log.txt",
+    `\n${Date.now()}: ${req.ip}: ${req.method}: ${req.path}`,
+    (err, data) => {
+         next();
+    }
+  )
+ 
+
+})
+
+
+app.use((req, res, next)=>{
+  console.log('Hello From Middleware 2');
+ next();
+})
 
 
 
@@ -15,6 +34,7 @@ app.use(express.urlencoded({extended: false}))
 // Routes
 
 app.get('/users', (req, res) => {
+  
   const html = `
     <ul>
       ${users.map((user) => `<li>${user.first_name}</li>`).join("")}
@@ -25,6 +45,7 @@ app.get('/users', (req, res) => {
 
 // REST API
 app.get('/api/users', (req, res) => {
+ 
     return res.json(users);
 });
 
